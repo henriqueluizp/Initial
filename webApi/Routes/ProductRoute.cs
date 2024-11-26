@@ -20,7 +20,7 @@ public static class ProductRoutes
       product.Price = req.price;
       product.CategoryId = req.CategoryId;
 
-      var category = await context.Category.FindAsync(product.CategoryId);
+      var category = await context.Categories.FindAsync(product.CategoryId);
       product.Category = category;
 
       await context.AddAsync(product);
@@ -29,13 +29,13 @@ public static class ProductRoutes
 
     route.MapGet("", async (ProductsListContext context) =>
     {
-      var products = await context.Product.ToListAsync();
+      var products = await context.Products.ToListAsync();
       return Results.Ok(products);
     });
 
     route.MapPut("{id:guid}", async (Guid id, ProductRequest req, ProductsListContext context) =>
    {
-     var product = await context.Product.FirstOrDefaultAsync(x => x.Id == id);
+     var product = await context.Products.FirstOrDefaultAsync(x => x.Id == id);
      if (product == null)
      {
        return Results.NotFound();
@@ -48,13 +48,13 @@ public static class ProductRoutes
 
     route.MapDelete("{id:guid}", async (Guid id, ProductsListContext context) =>
    {
-     var product = await context.Product.FirstOrDefaultAsync(x => x.Id == id);
+     var product = await context.Products.FirstOrDefaultAsync(x => x.Id == id);
      if (product == null)
      {
        return Results.NotFound();
      }
 
-     context.Product.Remove(product);
+     context.Products.Remove(product);
      await context.SaveChangesAsync();
      return Results.Ok(product);
    });

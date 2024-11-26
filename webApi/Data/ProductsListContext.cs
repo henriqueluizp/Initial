@@ -5,8 +5,8 @@ namespace webApi.Data;
 
 public class ProductsListContext : DbContext
 {
-  public DbSet<CategoryModel> Category { get; set; }
-  public DbSet<ProductModel> Product { get; set; }
+  public DbSet<CategoryModel> Categories { get; set; }
+  public DbSet<ProductModel> Products { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
   {

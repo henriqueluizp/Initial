@@ -23,13 +23,29 @@ public static class CategoryRoute
 
     route.MapGet("", async (ProductsListContext context) =>
     {
-      var categories = await context.Category.ToListAsync();
+      var categories = await context.Categories
+        .Include(c => c.Products)
+        .Select(c => new
+        {
+          c.Id,
+          c.Name,
+          Products = c.Products.Select(p => new
+          {
+            p.Id,
+            p.Name,
+            p.Price,
+            p.Image,
+            p.CategoryId
+          }).ToList()
+        })
+        .ToListAsync();
+
       return Results.Ok(categories);
     });
 
     route.MapPut("{id:guid}", async (Guid id, CategoryRequest req, ProductsListContext context) =>
    {
-     var category = await context.Category.FirstOrDefaultAsync(x => x.Id == id);
+     var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
      if (category == null)
      {
        return Results.NotFound();
@@ -42,14 +58,14 @@ public static class CategoryRoute
 
     route.MapDelete("{id:guid}", async (Guid id, ProductsListContext context) =>
    {
-     var category = await context.Category.FirstOrDefaultAsync(x => x.Id == id);
+     var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
      if (category == null)
      {
        return Results.NotFound();
      }
 
-     context.Category.Remove(category);
+     context.Categories.Remove(category);
      await context.SaveChangesAsync();
      return Results.Ok(category);
    });
