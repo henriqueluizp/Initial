@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';
 import { Product } from 'src/app/Product';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms'; // Verifique se isso está correto
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-product-form',
@@ -10,7 +10,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms'; // Verifiqu
   styleUrls: ['./product-form.component.css']
 })
 export class ProductFormComponent implements OnInit {
-  productForm: FormGroup; // Definindo a propriedade productForm como FormGroup
+  productForm: FormGroup;
   productId: string = '';
 
   constructor(
@@ -18,7 +18,7 @@ export class ProductFormComponent implements OnInit {
     private productService: ProductService,
     private fb: FormBuilder // Instanciando FormBuilder
   ) {
-    // Inicializando o productForm no construtor para garantir que ele seja um FormGroup
+
     this.productForm = this.fb.group({
       name: ['', [Validators.required]],
       price: ['', [Validators.required]],
@@ -32,7 +32,7 @@ export class ProductFormComponent implements OnInit {
     if (this.productId) {
       this.productService.getProductById(this.productId).subscribe(
         (product: Product) => {
-          this.productForm.patchValue(product); // Preenche o formulário com os dados do produto
+          this.productForm.patchValue(product);
         },
         error => {
           console.error('Erro ao carregar o produto:', error);
