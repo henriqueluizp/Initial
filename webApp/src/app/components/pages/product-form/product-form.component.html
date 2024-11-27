@@ -1,29 +1,30 @@
 <div>
   <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <div class="form_wrapper">
-      <label for="productName">Nome do Produto</label>
-      <input id="productName" formControlName="name" required />
+    <div>
+      <label for="name">Nome</label>
+      <input id="name" formControlName="name" type="text" />
     </div>
-
-    <div class="form_wrapper">
-      <label for="productPrice">Preço</label>
-      <input id="productPrice" formControlName="price" type="number" required />
+  
+    <div>
+      <label for="price">Preço</label>
+      <input id="price" formControlName="price" type="number" />
     </div>
-
-    <div class="form_wrapper">
-      <label for="category">Categoria</label>
-      <select id="category" formControlName="categoryId" required>
+  
+    <div>
+      <label for="categoryId">Categoria</label>
+      <select id="categoryId" formControlName="categoryId">
         <option *ngFor="let category of categories" [value]="category.id">
           {{ category.name }}
         </option>
       </select>
     </div>
-
-    <div class="form_wrapper">
-      <label for="productImage">Imagem (opcional)</label>
-      <input id="productImage" formControlName="image" type="text" />
+  
+    <div>
+      <label for="image">Imagem</label>
+      <input id="image" type="file" (change)="onFileChange($event)" />
+      <img *ngIf="selectedImage" [src]="selectedImage" alt="Preview da Imagem" style="max-width: 200px; max-height: 200px;" />
     </div>
-
-    <button type="submit" [disabled]="productForm.invalid">Cadastrar Produto</button>
-  </form>
+  
+    <button type="submit">Salvar Produto</button>
+  </form>  
 </div>

@@ -46,8 +46,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onDelete(productId: string): void {
-    if (confirm('Tem certeza de que deseja remover este produto?')) {
+  onDelete(productId: string | undefined): void {
+    if (productId && confirm('Tem certeza de que deseja remover este produto?')) {
       this.productService.deleteProduct(productId).subscribe(() => {
         this.filteredProducts = this.filteredProducts.filter(
           (product) => product.id !== productId
@@ -56,7 +56,14 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onEdit(productId: string): void {
-    this.router.navigate(['/product-form', productId]);
+  onEdit(productId: string | undefined): void {
+    if (productId) {
+      this.router.navigate(['/product-form', productId]);
+    }
+  }
+
+  getCategoryName(categoryId: string): string {
+    const category = this.categories.find(cat => cat.id === categoryId);
+    return category ? category.name : 'Categoria não encontrada';
   }
 }

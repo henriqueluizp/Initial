@@ -6,14 +6,25 @@
     <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
   </select>
 
-  <div *ngFor="let product of filteredProducts">
+  <div *ngFor="let product of filteredProducts" class="product-item">
     <div>
-      <h3>{{ product.name }}</h3>
-      <p>Preço: {{ product.price | currency }}</p>
-      <p>Categorias: {{ product.categoryId }}</p>
-
-      <button *ngIf="product.id" (click)="onEdit(product.id)">🖊️ Editar</button>
-      <button (click)="onDelete(product.id!)">❌ Remover</button>
+      <strong>Nome:</strong> {{ product.name }}
     </div>
-  </div>
+    <div>
+      <strong>Preço:</strong> R$ {{ product.price | number: '1.2-2' }}
+    </div>
+    <div>
+      <strong>Categoria:</strong> 
+      {{ getCategoryName(product.categoryId) }}
+    </div>
+    <div *ngIf="product.image">
+      <strong>Imagem:</strong>
+      <img [src]="product.image" alt="{{ product.name }}" style="max-width: 200px; max-height: 200px;" />
+    </div>
+    <div>
+      <button *ngIf="product.id" (click)="onEdit(product.id)">Editar</button>
+      <button *ngIf="product.id" (click)="onDelete(product.id)">Excluir</button>
+    </div>
+    <hr />
+  </div>  
 </div>

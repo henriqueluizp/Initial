@@ -16,6 +16,7 @@ export class ProductFormComponent implements OnInit {
   categories: Category[] = [];
   product: Product = { name: '', price: 0, categoryId: '', image: '' };
   productId: string | null = null;
+  selectedImage: string | null = null; // Armazena a imagem em base64
 
   constructor(
     private categoryService: CategoryService,
@@ -27,65 +28,59 @@ export class ProductFormComponent implements OnInit {
       name: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(0)]],
       categoryId: ['', Validators.required],
-      image: ['']
+      image: [''] // Mantém o campo de imagem
     });
   }
 
   ngOnInit(): void {
-    // Carregar categorias
     this.categoryService.getCategories().subscribe((data) => {
       this.categories = data;
     });
 
-    // Obter o productId da URL
     this.productId = this.route.snapshot.paramMap.get('productId');
 
     if (this.productId) {
-      // Verifica se o productId existe e busca o produto correspondente
-      this.productService.getProducts().subscribe((products) => {
-        this.product = products.find(p => p.id === this.productId) || {} as Product;
-
-        if (this.product && this.product.id) {
-        // Preenche o formulário com os dados do produto
-          this.productForm.setValue({
-            name: this.product.name,
-            price: this.product.price,
-            categoryId: this.product.categoryId,
-            image: this.product.image || '' // Caso o campo image seja opcional
-          });
-        }
+      this.productService.getProductById(this.productId).subscribe((product) => {
+        this.product = product;
+        this.productForm.setValue({
+          name: this.product.name,
+          price: this.product.price,
+          categoryId: this.product.categoryId,
+          image: '' // Campo de imagem é opcional e não é carregado no formulário
+        });
       });
+    }
+  }
+
+  onFileChange(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.selectedImage = reader.result as string;
+        this.productForm.patchValue({ image: this.selectedImage });
+      };
+      reader.readAsDataURL(file);
     }
   }
 
   saveProduct(): void {
     if (this.productForm.valid) {
-      const productData: Product = this.productForm.value;
+      const productData: Product = {
+        ...this.productForm.value,
+        image: this.selectedImage || this.productForm.value.image // Usa a imagem selecionada ou mantém a existente
+      };
 
       if (this.productId) {
-        // Se existe productId, é edição
-        this.productService.updateProduct(this.productId, productData).subscribe(
-          (response) => {
-            alert('Produto atualizado com sucesso!');
-            this.productForm.reset(); // Resetar o formulário após a atualização
-          },
-          (error) => {
-            alert('Erro ao atualizar o produto');
-            console.error(error);
-          }
-        );
+        this.productService.updateProduct(this.productId, productData).subscribe(() => {
+          alert('Produto atualizado com sucesso!');
+          this.productForm.reset();
+        });
       } else {
-        // Se não existe productId, é cadastro
-        this.productService.createProduct(productData).subscribe(
-          (response) => {
-            alert('Produto cadastrado com sucesso!');
-            this.productForm.reset(); // Resetar o formulário após o cadastro
-          },
-          (error) => {
-            alert('Erro ao cadastrar o produto');
-            console.error(error);
-          }
-        );
+        this.productService.createProduct(productData).subscribe(() => {
+          alert('Produto cadastrado com sucesso!');
+          this.productForm.reset();
+        });
       }
     } else {
       alert('Formulário inválido!');
@@ -93,7 +88,6 @@ export class ProductFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('Valores no submit:', this.productForm.value);
     this.saveProduct();
   }
 }

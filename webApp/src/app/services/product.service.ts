@@ -13,9 +13,10 @@ export class ProductService {
   constructor(private http: HttpClient) { }
 
   createProduct(product: Product): Observable<Product> {
-    return this.http.post<Product>(this.apiUrl, product);
+    return this.http.post<Product>(this.apiUrl, product, {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
-
   deleteProduct(productId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${productId}`);
   }
@@ -29,6 +30,8 @@ export class ProductService {
   }
 
   updateProduct(productId: string, product: Product): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${productId}`, product);
+    return this.http.put<Product>(`${this.apiUrl}/${productId}`, product, {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
