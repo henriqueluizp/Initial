@@ -4,12 +4,12 @@
       <label for="name">Nome</label>
       <input id="name" formControlName="name" type="text" />
     </div>
-  
+
     <div>
       <label for="price">Preço</label>
       <input id="price" formControlName="price" type="number" />
     </div>
-  
+
     <div>
       <label for="categoryId">Categoria</label>
       <select id="categoryId" formControlName="categoryId">
@@ -18,13 +18,14 @@
         </option>
       </select>
     </div>
-  
+
     <div>
       <label for="image">Imagem</label>
       <input id="image" type="file" (change)="onFileChange($event)" />
-      <img *ngIf="selectedImage" [src]="selectedImage" alt="Preview da Imagem" style="max-width: 200px; max-height: 200px;" />
+      <img *ngIf="selectedImage" [src]="selectedImage" alt="Preview da Imagem"
+        style="max-width: 200px; max-height: 200px;" />
     </div>
-  
+
     <button type="submit">Salvar Produto</button>
-  </form>  
+  </form>
 </div>
