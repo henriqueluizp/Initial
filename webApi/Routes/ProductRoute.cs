@@ -14,17 +14,19 @@ public static class ProductRoutes
 
     route.MapPost("", async (ProductRequest req, ProductsListContext context) =>
     {
-      var product = new ProductModel();
-      product.Name = req.name;
-      product.Image = req.image;
-      product.Price = req.price;
-      product.CategoryId = req.CategoryId;
+        var product = new ProductModel
+        {
+            Name = req.name,
+            Image = req.image,
+            Price = req.price,
+            CategoryId = req.CategoryId
+        };
 
-      var category = await context.Categories.FindAsync(product.CategoryId);
-      product.Category = category;
+        var category = await context.Categories.FindAsync(product.CategoryId);
+        product.Category = category;
 
-      await context.AddAsync(product);
-      await context.SaveChangesAsync();
+        await context.AddAsync(product);
+        await context.SaveChangesAsync();
     });
 
     route.MapGet("", async (ProductsListContext context) =>
@@ -34,17 +36,18 @@ public static class ProductRoutes
     });
 
     route.MapPut("{id:guid}", async (Guid id, ProductRequest req, ProductsListContext context) =>
-   {
-     var product = await context.Products.FirstOrDefaultAsync(x => x.Id == id);
-     if (product == null)
-     {
-       return Results.NotFound();
-     }
+    {
+        var product = await context.Products.FirstOrDefaultAsync(x => x.Id == id);
+        if (product == null) return Results.NotFound();
 
-     product.Name = req.name;
-     await context.SaveChangesAsync();
-     return Results.Ok(product);
-   });
+        product.Name = req.name;
+        product.Image = req.image;
+        product.Price = req.price;
+        product.CategoryId = req.CategoryId;
+
+        await context.SaveChangesAsync();
+        return Results.Ok(product);
+    });
 
     route.MapDelete("{id:guid}", async (Guid id, ProductsListContext context) =>
    {
