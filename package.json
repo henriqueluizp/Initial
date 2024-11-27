@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@types/jasmine": "^5.1.4",
+    "@types/node": "^22.10.0"
+  },
+  "dependencies": {
+    "@angular/platform-browser": "^19.0.1"
+  }
+}

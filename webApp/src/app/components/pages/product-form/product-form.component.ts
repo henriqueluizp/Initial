@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
+import { Category } from 'src/app/Category';
 import { Product } from 'src/app/Product';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-product-form',
@@ -10,32 +12,47 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./product-form.component.css']
 })
 export class ProductFormComponent implements OnInit {
+  product: Product = { name: '', price: 0, categoryId: '', image: '' };
+  categories: Category[] = [];
+  productId: string | null = null;
   productForm: FormGroup;
-  productId: string = '';
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private categoryService: CategoryService,
     private productService: ProductService,
-    private fb: FormBuilder // Instanciando FormBuilder
+    private route: ActivatedRoute,
+    private fb: FormBuilder
   ) {
-
     this.productForm = this.fb.group({
-      name: ['', [Validators.required]],
-      price: ['', [Validators.required]],
-      categoryId: ['', [Validators.required]],
+      name: ['', Validators.required],
+      price: ['', [Validators.required, Validators.min(0)]],
+      categoryId: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
-    this.productId = this.activatedRoute.snapshot.paramMap.get('id') as string;
+    this.categoryService.getCategories().subscribe((data) => {
+      this.categories = data;
+    });
+
+    this.productId = this.route.snapshot.paramMap.get('productId');
 
     if (this.productId) {
-      this.productService.getProductById(this.productId).subscribe(
-        (product: Product) => {
-          this.productForm.patchValue(product);
+      this.productService.getProducts().subscribe((products) => {
+        this.product = products.find(p => p.id === this.productId) || {} as Product;
+        this.productForm.setValue({
+          name: this.product.name,
+          price: this.product.price,
+          categoryId: this.product.categoryId,
+        });
+      });
+    } else {
+      this.productService.createProduct(this.productForm.value).subscribe(
+        (response) => {
+          console.log('Produto cadastrado com sucesso:', response);
         },
-        error => {
-          console.error('Erro ao carregar o produto:', error);
+        (error) => {
+          console.error('Erro ao cadastrar produto:', error);
         }
       );
     }
@@ -43,16 +60,25 @@ export class ProductFormComponent implements OnInit {
 
   saveProduct(): void {
     if (this.productForm.valid) {
-      const productData = this.productForm.value;
       if (this.productId) {
-        this.productService.updateProduct(this.productId, productData).subscribe(() => {
-          console.log('Produto atualizado');
-        });
-      } else {
-        this.productService.createProduct(productData).subscribe(() => {
-          console.log('Produto criado');
-        });
+        this.productService.updateProduct(this.productId, this.productForm.value).subscribe(
+          (response) => {
+            alert('Produto atualizado com sucesso!');
+          },
+          (error) => {
+            alert('Erro ao atualizar o produto');
+          }
+        );
       }
+    } else {
+      alert('Formulário inválido!');
     }
+  }
+
+  onSubmit(): void {
+    console.log(this.productForm.value)
+    console.log(this.productForm.get('name')?.value);
+    this.productForm.updateValueAndValidity();
+    this.saveProduct();
   }
 }

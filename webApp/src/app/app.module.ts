@@ -14,7 +14,7 @@ import { HomeComponent } from './components/pages/home/home.component';
 import { NewProductsComponent } from './components/pages/new-products/new-products.component';
 import { NewCategoryComponent } from './components/pages/new-category/new-category.component';
 import { CategoryFormComponent } from './components/category-form/category-form.component';
-import { ProductFormComponent } from './components/product-form/product-form.component';
+import { ProductFormComponent } from './components/pages/product-form/product-form.component';
 
 @NgModule({
   declarations: [
