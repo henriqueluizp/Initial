@@ -1,0 +1,19 @@
+<div>
+  <h2>Produtos</h2>
+
+  <label for="category">Filtrar por categoria:</label>
+  <select id="category" (change)="onCategoryChange($event)">
+    <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+  </select>
+
+  <div *ngFor="let product of filteredProducts">
+    <div>
+      <h3>{{ product.name }}</h3>
+      <p>Preço: {{ product.price | currency }}</p>
+      <p>Categorias: {{ product.categoryId }}</p>
+
+      <button *ngIf="product.id" (click)="onEdit(product.id)">🖊️ Editar</button>
+      <button (click)="onDelete(product.id!)">❌ Remover</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+* {
+  padding: 0;
+  margin: 0;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  box-sizing: border-box;
+  color: #444;
+}
+
+a {
+  text-decoration: none;
+  color: #444;
+  transition: .4s;
+}
+
+a:hover {
+  color: blue;
+}
+
+form {
+  width: 20rem;
+  padding: 1em;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  background: #c3c3c3;
+  border-radius: 10px;
+}
+
+.form_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+form input[type="submit"] {
+  width: 250px;
+  background: blue;
+  border: none;
+  padding: .75rem;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .4s;
+  border: solid 1px blue;
+}
+
+form input[type="submit"]:hover {
+  color: blue;
+  background: white;
+}

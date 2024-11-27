@@ -1,0 +1,12 @@
+<form (ngSubmit)="submit()" [formGroup]="categoryForm" #formDir="ngForm">
+  <div class="form_wrapper">
+    <label for="categoryName">Categoria:</label>
+    <input type="text" id="categoryName" formControlName="name" placeholder="">
+
+    <div class="validation-error" *ngIf="name.invalid && formDir.submitted">
+      <p *ngIf=" name.errors?.['required']">O nome da categoria é obrigatório!</p>
+    </div>
+
+  </div>
+  <input type="submit" value="{{btnText}}">
+</form>

@@ -12,7 +12,26 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MinhaPolitica", policy =>
+   {
+       policy.AllowAnyOrigin()
+             .AllowAnyHeader()
+             .AllowAnyMethod();
+   });
+
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 var app = builder.Build();
+app.UseCors("AllowAngularApp");
 
 if (app.Environment.IsDevelopment())
 {
