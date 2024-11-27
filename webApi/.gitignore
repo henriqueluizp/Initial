@@ -1,0 +1,33 @@
+# Build artifacts
+bin/
+obj/
+*.user
+*.rsuser
+
+# Log files
+*.log
+logs/
+
+# User secrets
+secrets.json
+
+# Runtime files
+*.pdb
+*.mdb
+
+# Visual Studio settings
+.vscode/
+.idea/
+*.suo
+*.cache
+*.csproj.user
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+
+# Generated files
+appsettings.Development.json
+appsettings.Production.json
+
+# SQLite database files
+*.sqlite
+*.sqlite3

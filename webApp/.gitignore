@@ -6,10 +6,21 @@
 /out-tsc
 /bazel-out
 
-# Node
+# Node.js dependencies
 /node_modules
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Compiled TypeScript
+*.js
+*.js.map
+*.d.ts
+
+# Logs
+logs/
+*.log
+testem.log
 
 # IDEs and editors
 .idea/
@@ -26,17 +37,27 @@ yarn-error.log
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
 
 # Miscellaneous
 /.angular/cache
 .sass-cache/
 /connect.lock
-/coverage
 /libpeerconnection.log
-testem.log
 /typings
 
 # System files
 .DS_Store
 Thumbs.db
+
+# Angular CLI outputs
+test-output/
+karma-results/
+
+# Temporary files
+*.bak
+*.tmp
+*.temp
+*.swp
+
+# Angular environment
+src/environments/environment*.ts

@@ -1,0 +1,38 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE/Editor settings
+.vscode/
+.idea/
+*.swp
+
+# Build outputs
+dist/
+build/
+
+# Generated files
+*.bak
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# User-specific files
+*.env
+.env.local
+.env.*.local
+
+# System files
+desktop.ini
