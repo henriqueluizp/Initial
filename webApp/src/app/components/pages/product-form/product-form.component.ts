@@ -12,10 +12,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./product-form.component.css']
 })
 export class ProductFormComponent implements OnInit {
-  product: Product = { name: '', price: 0, categoryId: '', image: '' };
-  categories: Category[] = [];
-  productId: string | null = null;
   productForm: FormGroup;
+  categories: Category[] = [];
+  product: Product = { name: '', price: 0, categoryId: '', image: '' };
+  productId: string | null = null;
 
   constructor(
     private categoryService: CategoryService,
@@ -26,47 +26,64 @@ export class ProductFormComponent implements OnInit {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(0)]],
-      categoryId: ['', Validators.required]
+      categoryId: ['', Validators.required],
+      image: ['']
     });
   }
 
   ngOnInit(): void {
+    // Carregar categorias
     this.categoryService.getCategories().subscribe((data) => {
       this.categories = data;
     });
 
+    // Obter o productId da URL
     this.productId = this.route.snapshot.paramMap.get('productId');
 
     if (this.productId) {
+      // Verifica se o productId existe e busca o produto correspondente
       this.productService.getProducts().subscribe((products) => {
         this.product = products.find(p => p.id === this.productId) || {} as Product;
-        this.productForm.setValue({
-          name: this.product.name,
-          price: this.product.price,
-          categoryId: this.product.categoryId,
-        });
-      });
-    } else {
-      this.productService.createProduct(this.productForm.value).subscribe(
-        (response) => {
-          console.log('Produto cadastrado com sucesso:', response);
-        },
-        (error) => {
-          console.error('Erro ao cadastrar produto:', error);
+
+        if (this.product && this.product.id) {
+        // Preenche o formulário com os dados do produto
+          this.productForm.setValue({
+            name: this.product.name,
+            price: this.product.price,
+            categoryId: this.product.categoryId,
+            image: this.product.image || '' // Caso o campo image seja opcional
+          });
         }
-      );
+      });
     }
   }
 
   saveProduct(): void {
     if (this.productForm.valid) {
+      const productData: Product = this.productForm.value;
+
       if (this.productId) {
-        this.productService.updateProduct(this.productId, this.productForm.value).subscribe(
+        // Se existe productId, é edição
+        this.productService.updateProduct(this.productId, productData).subscribe(
           (response) => {
             alert('Produto atualizado com sucesso!');
+            this.productForm.reset(); // Resetar o formulário após a atualização
           },
           (error) => {
             alert('Erro ao atualizar o produto');
+            console.error(error);
+          }
+        );
+      } else {
+        // Se não existe productId, é cadastro
+        this.productService.createProduct(productData).subscribe(
+          (response) => {
+            alert('Produto cadastrado com sucesso!');
+            this.productForm.reset(); // Resetar o formulário após o cadastro
+          },
+          (error) => {
+            alert('Erro ao cadastrar o produto');
+            console.error(error);
           }
         );
       }
@@ -76,9 +93,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.productForm.value)
-    console.log(this.productForm.get('name')?.value);
-    this.productForm.updateValueAndValidity();
+    console.log('Valores no submit:', this.productForm.value);
     this.saveProduct();
   }
 }

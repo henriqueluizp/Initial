@@ -1,18 +1,18 @@
 <div>
-  <form (ngSubmit)="onSubmit()" #productForm="ngForm">
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
     <div class="form_wrapper">
       <label for="productName">Nome do Produto</label>
-      <input id="productName" name="productName" [(ngModel)]="product.name" required />
+      <input id="productName" formControlName="name" required />
     </div>
 
     <div class="form_wrapper">
       <label for="productPrice">Preço</label>
-      <input id="productPrice" name="productPrice" type="number" [(ngModel)]="product.price" required />
+      <input id="productPrice" formControlName="price" type="number" required />
     </div>
 
     <div class="form_wrapper">
       <label for="category">Categoria</label>
-      <select id="category" name="category" [(ngModel)]="product.categoryId" required>
+      <select id="category" formControlName="categoryId" required>
         <option *ngFor="let category of categories" [value]="category.id">
           {{ category.name }}
         </option>
@@ -21,9 +21,9 @@
 
     <div class="form_wrapper">
       <label for="productImage">Imagem (opcional)</label>
-      <input id="productImage" name="productImage" type="text" [(ngModel)]="product.image" />
+      <input id="productImage" formControlName="image" type="text" />
     </div>
 
-    <button type="submit" [disabled]="!productForm.valid">Cadastrar Produto</button>
+    <button type="submit" [disabled]="productForm.invalid">Cadastrar Produto</button>
   </form>
 </div>
